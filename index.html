@@ -1,0 +1,133 @@
+<!DOCTYPE html
+	PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="ko" lang="ko">
+
+<head>
+	<title>Cross-Browser QRCode generator for Javascript</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no" />
+	<script type="text/javascript" src="jquery.min.js"></script>
+	<script type="text/javascript" src="qrcode.js"></script>
+	<style>
+		#qrcodeList {
+			display: flex;
+			gap: 300px;
+			flex-wrap: wrap;
+			padding-left: 20px;
+		}
+
+		.checked {
+			visibility: hidden;
+		}
+
+		.header {
+			display: flex;
+			gap: 50px;
+			justify-content: space-between;
+			align-items: center;
+		}
+
+		.header>* {
+			width: 33%;
+			height: 100%;
+		}
+	</style>
+</head>
+
+<body>
+	<div class="header">
+		<textarea placeholder="Introduce la lista de textos para generar los QRs" id="txtQRsList" rows="7"></textarea>
+		<input id="separador" placeholder="Indica el separador presente en la lista anterior" type="text" value="," />
+		<button id="btnCreate">Crear Lista QRs</button>
+	</div>
+
+	<h1 id="titleQr"></h1>
+	<div id="qrcodeList"></div>
+
+	<script type="text/javascript">
+		function ReadQrs() {
+			var value = document.getElementById("txtQRsList")?.value;
+			if (value && value.length > 0) {
+				value = value.replace(/"/g, "");
+				var separador = document.getElementById("separador")?.value;
+				if (separador && separador.length > 0) {
+					var list = value.split(separador || ",");
+					qrList = [
+						"555524304661",
+						"944869240871",
+						"448842317574",
+						"250043799828",
+						"976006169384",
+						"962012751115",
+						"525225494227",
+						"007726527543",
+						"619931564472",
+						"542119798014",
+						"039198344531",
+						"079902875532",
+						"035495567562",
+						"422512446705",
+						"959511115748",
+						"806143204927",
+						"278045392831",
+						"710660005414",
+						"417738792633",
+						"904741661929",
+						"895091147921",
+						"295610717705",
+						"028985244389",
+						"959324865702",
+						"696191004439",
+						"747921160775",
+						"453188994157",
+						"874745546198",
+						"537135412175",
+						"107139431201",
+						"840304338283",
+						"249517456613",
+						"319928321277",
+						"640117571735",
+						"836892853770",
+						"838571139776",
+						"826637100004",
+						"717135465083",
+					];
+					ProcessQr(list);
+				}
+
+			}
+
+
+		}
+		function ProcessQr(qrList) {
+			var qrcodeList = document.getElementById("qrcodeList");
+			qrcodeList.setHTML("");
+			qrList.forEach(qrCode => {
+				if (qrCode.length > 0) {
+					var newQr = document.createElement("DIV");
+					newQr.setAttribute("id", "qr_" + qrCode);
+
+					newQr.addEventListener("click", function () {
+						this.setAttribute("class", "checked");
+					})
+
+					qrcode = new QRCode(newQr, {
+						width: 300,
+						height: 300
+					});
+					qrcode.makeCode(qrCode);
+					qrcodeList.appendChild(newQr);
+				}
+
+			});
+			var title = document.getElementById("titleQr");
+			title.setHTML("QRs generados: " + qrList.filter(x => x.length > 0).length)
+		}
+
+		$("#btnCreate").
+			on("click", function () {
+				ReadQrs();
+			});
+
+	</script>
+</body>
